@@ -39,12 +39,25 @@ def create_species_table(cur, conn):
 # TASK 1
 # CREATE TABLE FOR PATIENTS IN DATABASE
 def create_patients_table(cur, conn):
-    pass
+
+    #Pet id, name (string), species_id (number), age (integer), cuteness (integer),aggressiveness (number)
+
+    cur.execute("DROP TABLE IF EXISTS Patients")
+    cur.execute("CREATE TABLE Patients (id INTEGER PRIMARY KEY, name TEXT, species_id INTEGER, age INTEGER,\
+         cuteness INTEGER, aggressiveness INTEGER )")
+  
+    conn.commit()
+
+    
 
 
 # ADD FLUFFLE TO THE TABLE
 def add_fluffle(cur, conn):
-    pass
+    #Name = Fluffle, species = “Rabbit”, age = 3, cuteness = 90, aggressiveness = 100
+    cur.execute("INSERT INTO Patients (id,name,species_id, age, cuteness, aggressiveness) VALUES (?,?,?,?,?,?)",\
+        ('0','Fluffle','0', '3','90','100'))
+    conn.commit()
+    
     
 
 # TASK 2
@@ -59,6 +72,16 @@ def add_pets_from_json(filename, cur, conn):
     json_data = json.loads(file_data)
 
     # THE REST IS UP TO YOU
+    num = 1
+    for i in json_data:
+        res = cur.execute("SELECT id FROM Species WHERE title = ?",(i['species'],))
+        species_id = int(res.fetchone()[0])
+        cur.execute("INSERT INTO Patients (id,name,species_id, age, cuteness, aggressiveness) VALUES (?,?,?,?,?,?)",\
+        (num,i['name'],species_id,i['age'], i['cuteness'],i['aggressiveness']))
+        num = num + 1
+
+    conn.commit()
+
     pass
 
 
